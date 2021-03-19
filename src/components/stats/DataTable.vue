@@ -20,6 +20,7 @@
       :items="dataList"
       class="elevation-0 transparentTable px-2 container--fluid position-relative"
       :item-class="rowClass"
+      :search="search"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -28,9 +29,16 @@
               inset
               vertical
           ></v-divider> -->
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Search"
+            single-line
+            hide-details
+          ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="600px">
-            <template v-slot:activator="{ on, attrs }">
+            <template v-slot:activator="{ on, attrs }" v-if="ifNew">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
                 New Item
               </v-btn>
@@ -52,7 +60,7 @@
                       md="6"
                       v-for="item in configList"
                       :key="item.value"
-                      v-show="item.value != 'id'"
+                      v-show="item.value != 'id' && item.value != 'drugCount'"
                     >
                       <v-select
                         :items="item.item"
@@ -99,6 +107,93 @@
         </v-toolbar>
       </template>
 
+      <template v-slot:item.drugCount="{ item }">
+        <v-tooltip 
+        allow-overflow
+        offset-overflow
+        :open-delay="-1"
+        content-class="transparent backdrop-blur o-100 pa-0"
+        bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <td v-bind="attrs" v-on="on" @mouseenter="drugPreview(item.id)">{{ item.drugCount }}</td>
+          </template>
+          <v-card
+            color="background"
+            elevation="9"
+          >
+            <v-card-title>
+              <span class="title ml-2">
+                {{ item.name }}
+              </span>
+            </v-card-title>
+            <v-card-text>
+              <v-simple-table dense>
+                <thead>
+                  <tr>
+                    <th>
+                      {{ "药物名" }}
+                    </th>
+                    <th class="font-weight-bold">
+                      {{ "量词" }}
+                    </th>
+                    <th>
+                      {{"数量"}}
+                      <v-icon small>
+                        mdi-sort-descending
+                      </v-icon>
+                    </th>
+                    <th>
+                      {{"总价"}}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(stat,index) in drugPreviewList"
+                    :key="index"
+                    class="monospace"
+                    :class="'font-weight-bold'"
+                  >
+                    <td>
+                      <v-icon
+                        small
+                      >
+                        {{ "mdi-chevron-double-right" }}
+                      </v-icon>
+                      {{ stat.name }}
+                    </td>
+                    <td>
+                      {{ stat.measure}}
+                    </td>
+                    <td>
+                      {{ stat.quantity }}
+                    </td>
+                    <td>
+                      {{ stat.price_count}}
+                    </td>
+                  </tr>
+                  <tr
+                    v-if="index > 0"
+                    style="background: inherit !important;"
+                  >
+                    <td
+                      colspan="3"
+                      class="text-center"
+                    >
+                      <v-icon color="grey">
+                        mdi-dots-horizontal
+                      </v-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+            </v-card-text>
+          
+          
+          </v-card>
+        </v-tooltip>
+      </template>
+
       <template v-slot:item.actions="{ item }">
         <v-btn x-small @click="editItem(item)" fab dark color="purple">
           <v-icon dark> mdi-pencil </v-icon></v-btn
@@ -117,8 +212,10 @@
 <script>
 import API from "../../api/api_data";
 export default {
-  props: ["dataList", "configList"],
+  props: ["dataList", "configList", "ifNew"],
   data: () => ({
+    drugPreviewList:[],
+    search: "",
     dialog: false,
     dialogDelete: false,
     tableCellClasses: "px-2 font-weight-bold monospace",
@@ -126,10 +223,8 @@ export default {
     desserts: [],
     newItem: {},
     editedIndex: -1,
-    editedItem: {
-    },
-    defaultItem: {
-    },
+    editedItem: {},
+    defaultItem: {},
   }),
 
   computed: {
@@ -156,10 +251,10 @@ export default {
       for (let key in this.dataList[0]) {
         let obj = new Object();
         let buf = this.configList[key];
-        if(key === "id"){
+        if (key === "id") {
           this.editedItem[key] = null;
           this.defaultItem[key] = null;
-        }else{
+        } else {
           this.editedItem[key] = "";
           this.defaultItem[key] = "";
         }
@@ -189,14 +284,17 @@ export default {
 
     deleteItemConfirm() {
       let url = window.location.href;
-      API.Post('api/'+url.split('/').pop()+'/delete', this.editedItem.id).then(function (res){
-          //验证
-          if(res.code == 104){
-            alert(res.msg);
-          }else if(res.code == 101){
-            alert(res.msg);
-          }
-      })
+      API.Post(
+        "api/" + url.split("/").pop() + "/delete",
+        this.editedItem.id
+      ).then(function (res) {
+        //验证
+        if (res.code == 104) {
+          alert(res.msg);
+        } else if (res.code == 101) {
+          alert(res.msg);
+        }
+      });
       this.closeDelete();
     },
 
@@ -217,34 +315,45 @@ export default {
     },
     save() {
       let url = window.location.href;
-      if(this.editedItem.id === null || this.editedIndex === -1){
+      if (this.editedItem.id === null || this.editedIndex === -1) {
         //new item
         console.log(this.editedItem);
         console.log(this.editedIndex);
         let _this = this;
-        API.Post('api/'+url.split('/').pop()+'/new', this.editedItem).then(function (res){
+        API.Post("api/" + url.split("/").pop() + "/new", this.editedItem).then(
+          function (res) {
             // 验证
-            if(res.code == 104){
+            if (res.code == 104) {
               alert(res.msg);
-            }else if(res.code == 101){
+            } else if (res.code == 101) {
               alert(res.msg);
               _this.close();
             }
-        })
-      }else{
-        API.Post('api/'+url.split('/').pop()+'/edit',this.editedItem).then(function (res){
-          // 验证
-            if(res.code == 104){
+          }
+        );
+      } else {
+        API.Post("api/" + url.split("/").pop() + "/edit", this.editedItem).then(
+          function (res) {
+            // 验证
+            if (res.code == 104) {
               alert(res.msg);
-            }else if(res.code == 101){
+            } else if (res.code == 101) {
               alert(res.msg);
               this.dialog = false;
               _this.close();
             }
-        })
+          }
+        );
       }
       this.close();
     },
+    drugPreview(id) {
+      let _this =this;
+      API.Post("api/bill/drugPreview", id).then(
+        function (res){
+          _this.drugPreviewList = res;
+        })
+    }
   },
 };
 </script>
@@ -253,10 +362,7 @@ export default {
 .full-width {
   width: 100%;
 }
-.rowClass {
-  font-weight: bold;
-  font-family: monospace;
-}
+
 .stage-card--background {
   background-size: cover !important;
   background-repeat: no-repeat !important;

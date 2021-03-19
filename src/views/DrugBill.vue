@@ -12,10 +12,10 @@
           class="px-4 px-sm-4 px-md-6 px-lg-6 px-xl-8 pt-0 pb-4"
         >
           <h2 class="subtitle-2 d-block" style="width: 100%">
-            {{ "药物单" }}
+            {{ "药物流水" }}
           </h2>
           <h1 class="title pt-1 no-wrap--text">
-            {{ "药物单" }}
+            {{ "药物流水" }}
           </h1>
         </v-row>
       </v-card-title>

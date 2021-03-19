@@ -220,52 +220,56 @@
             </v-btn>
             <v-btn color="blue darken-1" text @click="saveBill"> Save </v-btn>
           </v-card-actions>
-
-          <!-- <v-toolbar dark color="teal">
-            <v-toolbar-title>State selection</v-toolbar-title>
-            <v-autocomplete
-              v-model="select"
-              :items="items"
-              :loading="loading"
-              :search-input.sync="search"
-              class="mx-4"
-              flat
-              clearable
-              hide-no-data
-              hide-details
-              item-text="username"
-              item-value="id"
-              label="Search for a coin..."
-              solo-inverted
-            >
-              <template v-slot:item="{ item }">
-                <v-list-item-avatar
-                  color="indigo"
-                  class="headline font-weight-light white--text"
-                >
-                  {{ item.username.charAt(0) }}
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.username"></v-list-item-title>
-                  <v-list-item-subtitle
-                    v-text="item.password"
-                  ></v-list-item-subtitle>
-                </v-list-item-content>
-              </template>
-            </v-autocomplete> -->
-          <!-- </v-toolbar> -->
         </v-card>
       </v-dialog>
+
     </v-row>
+    <div class="transparent elevation-0 full-width">
+      <v-card class="bkop-light my-3 mx-6 elevation-4 content-card">
+        <v-card-title class="pb-0 mx-1">
+          <v-row
+            align="center"
+            justify="center"
+            class="px-4 px-sm-4 px-md-6 px-lg-6 px-xl-8 pt-0 pb-4"
+          >
+            <h1 class="title pt-1 no-wrap--text">
+              {{ "FUCK FUCK" }}
+            </h1>
+          </v-row>
+        </v-card-title>
+        <DataTable
+          class="px-3 px-sm-4 px-md-6 px-lg-6 px-xl-8 pt-0 pb-6"
+          :dataList="dataList"
+          :configList="configList"
+          :ifNew="false"
+          v-if="flag"
+        />
+      </v-card>
+    </div>
   </v-container>
 </template>
 
 
 <script>
 import API from "../api/api_data";
+import DataTable from "@/components/stats/DataTable";
 export default {
+  components:{
+    DataTable,
+  },
   data() {
     return {
+      dataList: [],
+      flag: false,
+      configList :{
+        id: { text: "id", value: "id", align: "start"},
+        patientName: {text: "姓名", value:"patientName", align: "left"},
+        doctorName: {text:"医生", value:"doctorName", aligin: "left"},
+        drugCount: {text:"药物样式总数", value:"drugCount", aligin:"left"},
+        countPrice: {text: "总金额", value:"countPrice", aligin: "left"},
+        checkText: {text: "诊断记录",value:"checkText", aligin:"left"},
+        time: {text:"时间", value:"time", aligin:"left"},
+      },
       count_price: 0,
       alert: false,
       dialog: false,
@@ -315,6 +319,9 @@ export default {
   //     return JSON.parse(JSON.stringify(this.test_items));
   //   },
   // },
+  created(){
+      this.bill_table_data();
+  },
   watch: {
     search(val) {
       val && val !== this.select && this.querySelections(val);
@@ -337,6 +344,13 @@ export default {
     },
   },
   methods: {
+    bill_table_data(){
+      let _this = this;
+      API.Get('api/bill').then(function (res) {
+        _this.dataList = res;
+        _this.flag = true;
+      })
+    },
     calculate() {
       this.count_price = this.count_func();
       this.alert = !this.alert;
@@ -454,8 +468,8 @@ export default {
             }
             this.bill_list.check_text = this.check_text;
       }
-      API.Post("api/bill", this.bill_list).then(function (res) {
-
+      API.Post("api/bill/new", this.bill_list).then(function (res) {
+          
       })
     },
   },

@@ -11,6 +11,7 @@ import AboutLayout from '../layout/AboutLayout'
 import OfficeManage from '../views/OfficeManage'
 import Register from '../views/Register'
 import Bill from '../views/Planner'
+import DrugBill from '../views/DrugBill'
 
 Vue.use(VueRouter)
 
@@ -68,6 +69,24 @@ const routes = [
     }
   },
   {
+    path: '/drugbill',
+    name: 'DrugBill',
+    component: DrugBill,
+    meta:{
+      icon: 'mdi-card-bulleted',
+      i18n: '药物流水',
+    }
+  },
+  {
+    path: '/bill',
+    name: "bill",
+    component: Bill,
+    meta:{
+      icon:'mdi-receipt',
+      i18n:'账单',
+    }
+  },
+  {
     path: '/about',
     name: 'About',
     component: AboutLayout,
@@ -97,15 +116,6 @@ const routes = [
       }
     ]
   },
-  {
-    path: '/bill',
-    name: "bill",
-    component: Bill,
-    meta:{
-      icon:'mdi-receipt',
-      i18n:'账单',
-    }
-  }
 
 ]
 
