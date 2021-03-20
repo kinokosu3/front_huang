@@ -1,6 +1,5 @@
 <template>
   <v-card
-    v-haptic
     class="mb-1"
     :to="{name: 'Search'}"
     :flat="searching"

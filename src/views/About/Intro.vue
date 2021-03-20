@@ -15,9 +15,6 @@
         />
 
         <v-col cols="12">
-          <v-btn color="primary" dark class="mb-2" @click="test">
-            test Item
-          </v-btn>
           <h1
             :class="{
               'display-2': $vuetify.breakpoint.mdAndUp,
@@ -25,11 +22,11 @@
             }"
             class="font-weight-bold mb-4 display-1"
           >
-            {{ "池化 Pooling" }}
+            {{ "欢迎来到XXXXXXXXX诊所管理平台" }}
           </h1>
           <p class="subtitle-1 line-height-wide">
             {{
-              "池化即空间池化，是卷积神经网络中用于提取特征的一种方法，通过对不同特征进行聚合统计处理以获得相对更低的维度，同时避免出现过拟合现象。"
+              "(这里仅仅用于填充，可更改，在Intro.vue文件)池化即空间池化，是卷积神经网络中用于提取特征的一种方法，通过对不同特征进行聚合统计处理以获得相对更低的维度，同时避免出现过拟合现象。"
             }}
             <br />
             {{
@@ -38,14 +35,6 @@
           </p>
         </v-col>
       </v-card-title>
-      <v-col cols="6" sm="6">
-        <v-select :items="items" label="Standard"></v-select>
-      </v-col>
-      <v-col cols="6" sm="6">
-        <v-btn color="primary" dark class="mb-2" @click="test">
-          test Item
-        </v-btn>
-      </v-col>
     </v-row>
   </v-card>
 </template>

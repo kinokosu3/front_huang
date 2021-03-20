@@ -1,8 +1,12 @@
 <template>
+  <!-- class="fill-height transparent elevation-0 full-width pa-md-2 pa-lg-4 pa-xl-4" -->
   <v-main
+    fluid
     alt-labels
     class="fill-height transparent elevation-0 full-width pa-md-2 pa-lg-4 pa-xl-4"
+
   >
+
     <v-card class="bkop-light pt-2 elevation-4 mt-2 content-card">
       <v-card-title class="pb-0 mx-1">
         <v-row
@@ -10,11 +14,8 @@
           justify="center"
           class="px-4 px-sm-4 px-md-6 px-lg-6 px-xl-8 pt-0 pb-4"
         >
-          <h2 class="subtitle-2 d-block" style="width: 100%">
-            {{ "FUCK FUCK" }}
-          </h2>
-          <h1 class="title pt-1 no-wrap--text">
-            {{ "FUCK FUCK" }}
+          <h1 class="title mt-2 pt-1 no-wrap--text font-weight-bold">
+            {{ "患者管理" }}
           </h1>
         </v-row>
       </v-card-title>
@@ -35,6 +36,11 @@ import API from "../api/api_data";
 export default {
   components: {
     DataTable,
+  },
+  provide(){
+    return {
+      reload: this.reload
+    }
   },
   data() {
     return {
@@ -92,6 +98,12 @@ export default {
         _this.dataList = res;
         _this.flag = true;
       });
+    },
+    reload(){
+      this.flag = false;
+      this.$nextTick(function(){
+        this.flag = true;
+      })
     },
   },
 };

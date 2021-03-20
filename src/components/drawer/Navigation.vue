@@ -2,7 +2,6 @@
   <v-list-item
     v-if="!route.children || route.meta.forceSingle"
     :key="route.name"
-    v-haptic
     :class="route.path === $route.path ? activeClass : ''"
     :two-line="!!route.meta.twoLine"
     @click="navigate(route)"
@@ -30,7 +29,6 @@
   <v-list-group
     v-else
     :key="route.name"
-    v-haptic
     :value="route.meta.active"
     :prepend-icon="route.meta.icon"
     :color="`blue ${dark ? 'lighten-1' : 'darken-2'}`"
@@ -43,7 +41,6 @@
     <v-list-item
       v-for="child in route.children.filter(el => !el.meta.hide)"
       :key="child.name"
-      v-haptic
       :class="child.path === $route.path.split('/')[2] ? activeClass : ''"
       @click="navigate(child)"
     >

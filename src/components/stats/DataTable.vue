@@ -19,7 +19,6 @@
       :headers="headers"
       :items="dataList"
       class="elevation-0 transparentTable px-2 container--fluid position-relative"
-      :item-class="rowClass"
       :search="search"
     >
       <template v-slot:top>
@@ -37,8 +36,8 @@
             hide-details
           ></v-text-field>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="600px">
-            <template v-slot:activator="{ on, attrs }" v-if="ifNew">
+          <v-dialog v-model="dialog" max-width="600px" v-if="ifNewAndEdit()">
+            <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
                 New Item
               </v-btn>
@@ -108,22 +107,22 @@
       </template>
 
       <template v-slot:item.drugCount="{ item }">
-        <v-tooltip 
-        allow-overflow
-        offset-overflow
-        :open-delay="-1"
-        content-class="transparent backdrop-blur o-100 pa-0"
-        bottom>
+        <v-tooltip
+          allow-overflow
+          offset-overflow
+          :open-delay="-1"
+          content-class="transparent backdrop-blur o-100 pa-0"
+          bottom
+        >
           <template v-slot:activator="{ on, attrs }">
-            <td v-bind="attrs" v-on="on" @mouseenter="drugPreview(item.id)">{{ item.drugCount }}</td>
+            <td v-bind="attrs" v-on="on" @mouseenter="drugPreview(item.id)">
+              {{ item.drugCount }}
+            </td>
           </template>
-          <v-card
-            color="background"
-            elevation="9"
-          >
+          <v-card color="background" elevation="9">
             <v-card-title>
               <span class="title ml-2">
-                {{ item.name }}
+                {{ "Drug" }}
               </span>
             </v-card-title>
             <v-card-text>
@@ -137,65 +136,210 @@
                       {{ "量词" }}
                     </th>
                     <th>
-                      {{"数量"}}
-                      <v-icon small>
-                        mdi-sort-descending
-                      </v-icon>
+                      {{ "数量" }}
+                      <v-icon small> mdi-sort-descending </v-icon>
                     </th>
                     <th>
-                      {{"总价"}}
+                      {{ "总价" }}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    v-for="(stat,index) in drugPreviewList"
+                    v-for="(stat, index) in PreviewBuff"
                     :key="index"
                     class="monospace"
                     :class="'font-weight-bold'"
                   >
                     <td>
-                      <v-icon
-                        small
-                      >
+                      <v-icon small>
                         {{ "mdi-chevron-double-right" }}
                       </v-icon>
                       {{ stat.name }}
                     </td>
                     <td>
-                      {{ stat.measure}}
+                      {{ stat.measure }}
                     </td>
                     <td>
                       {{ stat.quantity }}
                     </td>
                     <td>
-                      {{ stat.price_count}}
+                      {{ stat.price_count }}
                     </td>
                   </tr>
-                  <tr
-                    v-if="index > 0"
-                    style="background: inherit !important;"
-                  >
-                    <td
-                      colspan="3"
-                      class="text-center"
-                    >
-                      <v-icon color="grey">
-                        mdi-dots-horizontal
-                      </v-icon>
+                  <tr v-if="index > 0" style="background: inherit !important">
+                    <td colspan="3" class="text-center">
+                      <v-icon color="grey"> mdi-dots-horizontal </v-icon>
                     </td>
                   </tr>
                 </tbody>
               </v-simple-table>
             </v-card-text>
-          
-          
+          </v-card>
+        </v-tooltip>
+      </template>
+
+      <template v-slot:item.doctorName="{ item }">
+        <v-tooltip
+          allow-overflow
+          offset-overflow
+          :open-delay="-1"
+          content-class="transparent backdrop-blur o-100 pa-0"
+          bottom
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <td
+              v-bind="attrs"
+              v-on="on"
+              @mouseenter="doctorPreview(item.doctorId)"
+            >
+              {{ item.doctorName }}
+            </td>
+          </template>
+          <v-card color="background" elevation="9">
+            <v-card-text>
+              <v-simple-table dense>
+                <thead>
+                  <tr>
+                    <th>
+                      {{ "名字" }}
+                    </th>
+                    <th class="font-weight-bold">
+                      {{ "科室" }}
+                    </th>
+                    <th class="font-weight-bold">
+                      {{ "职责" }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    :key="index"
+                    class="monospace"
+                    :class="'font-weight-bold'"
+                  >
+                    <td>
+                      <v-icon small>
+                        {{ "mdi-chevron-double-right" }}
+                      </v-icon>
+                      {{ PreviewBuff.name }}
+                    </td>
+                    <td>
+                      {{ PreviewBuff.office }}
+                    </td>
+                    <td>
+                      {{ PreviewBuff.responsibility }}
+                    </td>
+                  </tr>
+                  <tr v-if="index > 0" style="background: inherit !important">
+                    <td colspan="3" class="text-center">
+                      <v-icon color="grey"> mdi-dots-horizontal </v-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+            </v-card-text>
+          </v-card>
+        </v-tooltip>
+      </template>
+
+      <template v-slot:item.patientName="{ item }">
+        <v-tooltip
+          allow-overflow
+          offset-overflow
+          :open-delay="-1"
+          content-class="transparent backdrop-blur o-100 pa-0"
+          bottom
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <td
+              v-bind="attrs"
+              v-on="on"
+              @mouseenter="patientPreview(item.patientId)"
+            >
+              {{ item.patientName }}
+            </td>
+          </template>
+          <v-card color="background" elevation="9">
+            <v-card-text>
+              <v-simple-table dense>
+                <thead>
+                  <tr>
+                    <th>
+                      {{ "姓名" }}
+                    </th>
+                    <th>
+                      {{ "性别" }}
+                    </th>
+                    <th>
+                      {{ "年龄" }}
+                    </th>
+                    <th>
+                      {{ "身份证号" }}
+                    </th>
+                    <th>
+                      {{ "手机号" }}
+                    </th>
+                    <th>
+                      {{ "地址" }}
+                    </th>
+                    <th>
+                      {{ "是否在治疗" }}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    :key="index"
+                    class="monospace"
+                    :class="'font-weight-bold'"
+                  >
+                    <td>
+                      <v-icon small>
+                        {{ "mdi-chevron-double-right" }}
+                      </v-icon>
+                      {{ PreviewBuff.name }}
+                    </td>
+                    <td>
+                      {{ PreviewBuff.sex }}
+                    </td>
+                    <td>
+                      {{ PreviewBuff.age }}
+                    </td>
+                    <td>
+                      {{ PreviewBuff.idCard }}
+                    </td>
+                    <td>
+                      {{ PreviewBuff.telNum }}
+                    </td>
+                    <td>
+                      {{ PreviewBuff.address }}
+                    </td>
+                    <td>
+                      {{ PreviewBuff.treatIf }}
+                    </td>
+                  </tr>
+                  <tr v-if="index > 0" style="background: inherit !important">
+                    <td colspan="3" class="text-center">
+                      <v-icon color="grey"> mdi-dots-horizontal </v-icon>
+                    </td>
+                  </tr>
+                </tbody>
+              </v-simple-table>
+            </v-card-text>
           </v-card>
         </v-tooltip>
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-btn x-small @click="editItem(item)" fab dark color="purple">
+        <v-btn
+          x-small
+          @click="editItem(item)"
+          fab
+          dark
+          color="purple"
+          v-show="ifNewAndEdit()"
+        >
           <v-icon dark> mdi-pencil </v-icon></v-btn
         >
         <v-btn x-small @click="deleteItem(item)" fab dark color="pink">
@@ -212,9 +356,11 @@
 <script>
 import API from "../../api/api_data";
 export default {
+  inject: ["reload"],
   props: ["dataList", "configList", "ifNew"],
   data: () => ({
-    drugPreviewList:[],
+    PreviewBuff: {},
+    snackbar: false,
     search: "",
     dialog: false,
     dialogDelete: false,
@@ -247,8 +393,18 @@ export default {
   },
 
   methods: {
+    ifNewAndEdit() {
+      let url = window.location.href;
+      if (url.split("/").pop() == "bill") {
+        console.log("1");
+        return false;
+      } else {
+        return true;
+      }
+    },
     initialize() {
       for (let key in this.dataList[0]) {
+        if (key === "patientId" || key === "doctorId") continue;
         let obj = new Object();
         let buf = this.configList[key];
         if (key === "id") {
@@ -268,6 +424,7 @@ export default {
       obj["text"] = "操作";
       obj["align"] = "center";
       this.headers.push(obj);
+      console.log(this.headers);
     },
     editItem(item) {
       this.editedIndex = this.dataList.indexOf(item);
@@ -284,6 +441,7 @@ export default {
 
     deleteItemConfirm() {
       let url = window.location.href;
+      let _this = this;
       API.Post(
         "api/" + url.split("/").pop() + "/delete",
         this.editedItem.id
@@ -293,6 +451,9 @@ export default {
           alert(res.msg);
         } else if (res.code == 101) {
           alert(res.msg);
+          let NewPage = "_empty" + "?time=" + new Date().getTime() / 500;
+          _this.$router.push(NewPage);
+          _this.$router.go(-1);
         }
       });
       this.closeDelete();
@@ -315,19 +476,20 @@ export default {
     },
     save() {
       let url = window.location.href;
+      let _this = this;
       if (this.editedItem.id === null || this.editedIndex === -1) {
         //new item
-        console.log(this.editedItem);
-        console.log(this.editedIndex);
-        let _this = this;
         API.Post("api/" + url.split("/").pop() + "/new", this.editedItem).then(
           function (res) {
             // 验证
             if (res.code == 104) {
               alert(res.msg);
             } else if (res.code == 101) {
-              alert(res.msg);
               _this.close();
+              alert(res.msg);
+              let NewPage = "_empty" + "?time=" + new Date().getTime() / 500;
+              _this.$router.push(NewPage);
+              _this.$router.go(-1);
             }
           }
         );
@@ -338,9 +500,11 @@ export default {
             if (res.code == 104) {
               alert(res.msg);
             } else if (res.code == 101) {
-              alert(res.msg);
-              this.dialog = false;
               _this.close();
+              alert(res.msg);
+              let NewPage = "_empty" + "?time=" + new Date().getTime() / 500;
+              _this.$router.push(NewPage);
+              _this.$router.go(-1);
             }
           }
         );
@@ -348,12 +512,29 @@ export default {
       this.close();
     },
     drugPreview(id) {
-      let _this =this;
-      API.Post("api/bill/drugPreview", id).then(
-        function (res){
-          _this.drugPreviewList = res;
-        })
-    }
+      let _this = this;
+      API.Post("api/bill/drugPreview", id).then(function (res) {
+        _this.PreviewBuff = res;
+      });
+    },
+    doctorPreview(id) {
+      let _this = this;
+      console.log("doctor" + id);
+      API.Post("api/bill/doctorPreview", id).then(function (res) {
+        console.log(res);
+        _this.PreviewBuff = res;
+      });
+      console.log(this.PreviewBuff);
+    },
+    patientPreview(id) {
+      let _this = this;
+      console.log("patient" + id);
+      API.Post("api/bill/patientPreview", id).then(function (res) {
+        _this.PreviewBuff = res;
+        console.log(res);
+      });
+      console.log(this.PreviewBuff);
+    },
   },
 };
 </script>

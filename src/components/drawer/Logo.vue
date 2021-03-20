@@ -18,7 +18,7 @@
         justify="center"
         class="flex-column"
       >
-        <span>{{ "one span" }}</span>
+        <span>{{ "管理平台" }}</span>
         <!-- <span>{{ "two span" }}</span> -->
       </v-row>
     </div>

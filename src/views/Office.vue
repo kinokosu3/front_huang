@@ -11,12 +11,11 @@
         <v-card
           class="d-flex flex-column link-card bkop-light position-relative"
         >
-          <v-card-title v-if="key" primary-title class="px-4 pt-4 pb-2">
+          <v-card-title v-if="key" primary-title class="px-4 pt-4 pb-2 align-content-center justify-center">
             <div>
               <div class="title">
                 {{ key }}
               </div>
-              <span v-if="key" class="subtitle-1">by {{ "link.author" }}</span>
             </div>
           </v-card-title>
 
@@ -26,7 +25,7 @@
                 cols="12"
                 sm="12"
                 md="6"
-                lg="4"
+                lg="3"
                 xl="5"
                 v-for="(value, index) in values"
                 :key="index"
@@ -47,35 +46,33 @@
                     </v-card-title>
                     <v-card-text class="flex-grow-1">
                       <v-list dense subheader>
-                        <!--        <v-subheader v-text="$t('members.responsibilities._name')" />-->
                         <v-list-item>
                           <v-list-item-avatar
                             :size="dense ? 24 : undefined"
                             :class="{ 'mr-2': dense }"
                           >
                             <v-icon :small="dense">
-                              {{ "responsibility.icon" }}
+                              {{ "mdi-eyedropper" }}
                             </v-icon>
                           </v-list-item-avatar>
                           <v-list-item-content>
                             <v-list-item-title class="v-list--force-line-break">
-                              {{ value.responsibility }}
+                              {{ "职责: "+value.responsibility }}
                             </v-list-item-title>
                             <v-list-item-subtitle
                               v-if="!dense"
                               class="monospace"
                             >
-                              {{ "responsibility.id" }}
+                              {{ value.id }}
                             </v-list-item-subtitle>
                           </v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card-text>
                     <!-- :key="`${member.name}-${id}`" -->
-                    <v-card-actions class="d-flex flex-row justify-center">
+                    <!-- <v-card-actions class="d-flex flex-row justify-center">
                       <v-btn
                         :key="member"
-                        v-haptic
                         icon
                         :href="`localhost:8080`"
                         target="_blank"
@@ -83,10 +80,10 @@
                         :title="twitter"
                       >
                         <v-icon>
-                          {{ "mdi-twitter" }}
+                          {{ "mdi-google" }}
                         </v-icon>
                       </v-btn>
-                    </v-card-actions>
+                    </v-card-actions> -->
                   </v-card>
                   <!--  -->
                 </transition>
@@ -119,7 +116,7 @@
           >
             <v-btn
               v-ripple
-              color="secondary"
+              color="light-green lighten-2"
               class="ma-2 mb-4"
               text-color="white"
               target="_blank"

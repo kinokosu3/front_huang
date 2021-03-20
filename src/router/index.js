@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Report from '../views/Report'
 import Login from '../views/Login'
 
 import Patient from '../views/Patient'
@@ -38,16 +37,7 @@ const routes = [
     component: Home,
     meta: {
       icon: 'mdi-home',
-      i18n: 'menu.home'
-    }
-  },
-  {
-    path:'/Report',
-    name: 'ReportByZone',
-    component: Report,
-    meta: {
-      icon: 'mdi-upload',
-      i18n: 'Report',
+      i18n: '主页'
     }
   },
   {
@@ -56,7 +46,7 @@ const routes = [
     component: Patient,
     meta: {
       icon: 'mdi-cube',
-      i18n: 'Patients',
+      i18n: '患者管理',
     }
   },
   {
@@ -65,7 +55,7 @@ const routes = [
     component: Drug,
     meta:{
         icon: 'mdi-security',
-        i18n: 'DrugManage',
+        i18n: '药物管理',
     }
   },
   {
@@ -92,7 +82,7 @@ const routes = [
     component: AboutLayout,
     meta: {
       icon: 'mdi-link-variant',
-      i18n: 'About',
+      i18n: '人员管理',
       active: true
     },
     children: [
@@ -103,7 +93,7 @@ const routes = [
         props: true,
         meta: {
           icon: 'mdi-account-group',
-          i18n: 'menu.about.links'
+          i18n: '科室管理'
         },
       },
       {

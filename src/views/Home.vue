@@ -1,39 +1,37 @@
 <template>
-  <v-container
-    fluid
-    class="fill-height justify-center"
-  >
-    <v-row
-      align="center"
-      :dense="$vuetify.breakpoint.mdAndDown"
-      class="mx-0"
-    >
+  <v-container fluid class="fill-height justify-center">
+    <v-row align="center" :dense="$vuetify.breakpoint.mdAndDown" class="mx-0">
+      <v-col cols="12" lg="6" xl="8">
+        <Intro class="card-translate-up" />
+      </v-col>
+
+      <v-col cols="12" lg="6" xl="4">
+        <Bulletin class="card-translate-up" />
+        <SiteStats class="card-translate-up" />
+      </v-col>
+      <v-col cols="12" md="6" class="align-self-stretch">
+        <Contribute class="card-translate-up align-self-stretch" />
+      </v-col>
       <v-col
         cols="12"
-        lg="6"
-        xl="8"
+        md="6"
+        class="align-self-stretch"
       >
-        <Intro
-          class="card-translate-up"
-        />
+        <License class="card-translate-up" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-// import Contribute from "@/views/About/Contribute";
-// import Donate from "@/views/About/Donate";
-import Intro from "@/views/About/Intro";
-// import Bulletin from "@/views/About/Bulletin";
-// import Contact from "@/views/About/Contact";
-import anime from 'animejs';
-// import License from "@/views/About/License";
-// import Console from "@/utils/Console";
-// import GettingStarted from "@/views/About/GettingStarted";
-// import SiteStatsOverview from "@/components/stats/SiteStatsOverview";
-// import HomeSearch from "@/views/About/HomeSearch";
 
+import Intro from "@/views/About/Intro";
+import anime from 'animejs';
+import Bulletin from "./About/Bulletin"
+import SiteStats from "./About/SiteStats"
+import Contribute from "./About/Contribute"
+import License from "./About/License"
+import API_Nomal from '../api/api_data'
 export default {
   name: "Home",
   // components: {
@@ -41,8 +39,13 @@ export default {
   //   SiteStatsOverview, GettingStarted, License, Contribute, Donate, Intro, Bulletin, Contact },
   components: {
     Intro,
+    Bulletin,
+    SiteStats,
+    Contribute,
+    License,
   },
   data: () => ({}),
+  
   mounted () {
     setTimeout(() => {
       try {
@@ -72,36 +75,6 @@ export default {
         Console.warn("HomeAnimation", "error when animating home entry animation", e)
       }
     }, 0);
-
-    // this.$nextTick(() => {
-    //   setTimeout(() => {
-    //     const el1 = document.querySelector(".card-translate-up");
-    //     const el2 = document.querySelector(".card-translate-up h1");
-    //     if ((el1 && el1.style.opacity === "0") || (el2 && el2.style.opacity === "0")) {
-    //       Console.info("HomeAnimation", "potential blank screen on home detected");
-    //
-    //       // try to fix this
-    //       const selectors = [
-    //         ".card-translate-up",
-    //         ".card-translate-up h1",
-    //         ".card-translate-up h2",
-    //         ".card-translate-up p",
-    //         ".card-translate-up span:not(.v-btn__content)",
-    //       ];
-    //       try {
-    //         for (const selector of selectors) {
-    //           for (const element of document.querySelectorAll(selector)) {
-    //             element.style.setProperty("opacity", 1);
-    //             element.style.setProperty("transform", "none");
-    //           }
-    //         }
-    //       } catch (e) {
-    //         Console.info("HomeAnimation", "blank screen fix trial failed", e)
-    //       }
-    //     }
-    //   }, 5000)
-    //
-    // })
   },
 };
 </script>
@@ -110,7 +83,7 @@ export default {
 .home-card {
   height: 100%;
 }
-  .card-translate-up {
-    transition: box-shadow 225ms ease-out;
-  }
+.card-translate-up {
+  transition: box-shadow 225ms ease-out;
+}
 </style>

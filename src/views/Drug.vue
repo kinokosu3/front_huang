@@ -1,6 +1,6 @@
 <template>
-  <v-stepper
-    v-model="step"
+  <v-main
+
     alt-labels
     class="fill-height transparent elevation-0 full-width pa-md-2 pa-lg-4 pa-xl-4"
   >
@@ -11,10 +11,7 @@
           justify="center"
           class="px-4 px-sm-4 px-md-6 px-lg-6 px-xl-8 pt-0 pb-4"
         >
-          <h2 class="subtitle-2 d-block" style="width: 100%">
-            {{ "药物单" }}
-          </h2>
-          <h1 class="title pt-1 no-wrap--text">
+          <h1 class="title mt-2 pt-1 no-wrap--text font-weight-bold">
             {{ "药物单" }}
           </h1>
         </v-row>
@@ -26,7 +23,7 @@
         :configList="configList"
       />
     </v-card>
-  </v-stepper>
+  </v-main>
 </template>
 
 <script>

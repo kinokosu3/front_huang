@@ -14,7 +14,6 @@
             expand
             class="safe-area--navigation"
         >
-          <GlobalSearchNavigation />
           <Navigation
             v-for="route in routes"
             :key="route.name"
@@ -32,7 +31,6 @@
         class="x--safe-area toolbar--safe-area flex-column"
       >
         <v-app-bar-nav-icon
-          v-haptic
           @click.stop="drawer = !drawer"
         />
 
@@ -43,7 +41,7 @@
           >
           </transition>
           <span class="title force-lang-font">
-            xx
+            {{ toolbar_name }}
           </span>
         </v-toolbar-title>
 
@@ -101,6 +99,7 @@ export default {
       drawer: !this.$vuetify.breakpoint.xsOnly,
       flag: null,
       token: null,
+      toolbar_name: "主页",
     }
   },
   created (){
@@ -128,7 +127,12 @@ export default {
     CenterClass(){
       return (this.$route.path === '/login'||this.$route.path === '/register'?false : true);
     }
-  }
+  },
+  watch: {
+	$route(to, from){
+    this.toolbar_name = to.meta.i18n;
+	}
+}
 
 };
 </script>

@@ -16,7 +16,7 @@
                         border="left"
                         class="mt-2 mb-6"
                       >
-                        {{ 'Notice: 破产了破产了破产了' }}
+                        {{ 'Notice:'+notice_text }}
                       </v-alert>
                       <v-text-field
                         class="mb-3"
@@ -121,6 +121,7 @@
 
 <script>
 import API from '../api/api_user'
+import API_Nomal from '../api/api_data'
 import '../styles/fonts.css'
 import anime from 'animejs';
 import { mapMutations} from 'vuex';
@@ -143,18 +144,25 @@ export default {
             },
             userToken: '',
             historyDialog: false,
-            error: ""
+            error: "",
+            notice_text: "",
         }
     },
     created (){
+      this.notice();
       var obj = document.getElementById("content");
-      console.log(obj);
       // obj.classList.remove("safe-area--v-content");
     },
     methods:{
       ...mapMutations(['changeLogin']),
         keyupClick() {
           this.$refs.pwd.focus()
+        },
+        notice(){
+          let _this = this;
+          API_Nomal.Get('notice/').then(function(res){
+            _this.notice_text = res;
+          })
         },
         login() {
           let _this = this;

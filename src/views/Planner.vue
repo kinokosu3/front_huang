@@ -1,11 +1,7 @@
 <template>
-  <v-container fluid class="align-content-center justify-center">
-    <v-row class="my-3 mx-6 flex-row" align="center">
-      <span class="title">
-        {{ "planner.actions._name" }}
-      </span>
-      <v-divider vertical class="mx-4" />
-    </v-row>
+  <v-container fluid 
+  
+  class="align-content-center justify-center fill-height">
     <v-row class="my-3 mx-6 flex-row" align="center">
       <v-dialog v-model="dialog" persistent max-width="900px">
         <template v-slot:activator="{ on, attrs }">
@@ -13,7 +9,7 @@
             block
             class="my-1"
             :class="{}"
-            color="teal white--text"
+            color="pink accent-2 white--text button-translate-up"
             :disabled="false"
             x-large
             :loading="false"
@@ -30,7 +26,7 @@
               {{ "planner.actions.calculating" }}
             </template>
             <v-icon left> mdi-calculator </v-icon>
-            {{ "planner.actions.calculate" }}
+              {{ "开单" }}
             <v-icon right> mdi-chevron-right </v-icon>
           </v-btn>
         </template>
@@ -87,7 +83,7 @@
                     hide-no-data
                     hide-details
                     item-text="name"
-                    item-value="office"
+                    item-value="name"
                     label="主治医师*"
                     required
                     cache-items
@@ -224,16 +220,16 @@
       </v-dialog>
 
     </v-row>
-    <div class="transparent elevation-0 full-width">
-      <v-card class="bkop-light my-3 mx-6 elevation-4 content-card">
+    <!-- <div class="transparent elevatio n-0 full-width"> -->
+      <v-card class="row bkop-light my-3 mx-6 elevation-4 content-card">
         <v-card-title class="pb-0 mx-1">
           <v-row
-            align="center"
-            justify="center"
-            class="px-4 px-sm-4 px-md-6 px-lg-6 px-xl-8 pt-0 pb-4"
+          align="center"
+          justify="center"
+          class="px-4 px-sm-4 px-md-6 px-lg-6 px-xl-8 pt-0 pb-4"
           >
-            <h1 class="title pt-1 no-wrap--text">
-              {{ "FUCK FUCK" }}
+            <h1 class="title mt-2 pt-1 no-wrap--text font-weight-bold">
+              {{ "账单" }}
             </h1>
           </v-row>
         </v-card-title>
@@ -245,7 +241,7 @@
           v-if="flag"
         />
       </v-card>
-    </div>
+    <!-- </div> -->
   </v-container>
 </template>
 
@@ -264,11 +260,11 @@ export default {
       configList :{
         id: { text: "id", value: "id", align: "start"},
         patientName: {text: "姓名", value:"patientName", align: "left"},
-        doctorName: {text:"医生", value:"doctorName", aligin: "left"},
-        drugCount: {text:"药物样式总数", value:"drugCount", aligin:"left"},
-        countPrice: {text: "总金额", value:"countPrice", aligin: "left"},
-        checkText: {text: "诊断记录",value:"checkText", aligin:"left"},
-        time: {text:"时间", value:"time", aligin:"left"},
+        doctorName: {text:"医生", value:"doctorName", align: "left"},
+        drugCount: {text:"药物样式总数", value:"drugCount", align:"left"},
+        countPrice: {text: "总金额", value:"countPrice", align: "left"},
+        checkText: {text: "诊断记录",value:"checkText", align:"left"},
+        time: {text:"时间", value:"time", align:"left"},
       },
       count_price: 0,
       alert: false,
@@ -348,6 +344,7 @@ export default {
       let _this = this;
       API.Get('api/bill').then(function (res) {
         _this.dataList = res;
+        console.log(res);
         _this.flag = true;
       })
     },
@@ -454,6 +451,7 @@ export default {
       // this.bill_list.drug_list = this.dynamicDrugItems;
       // // this.bill_list
       // console.log(this.bill_list);
+      let _this = this;
       if(this.nameItems.length == 0 || this.staffItems.length == 0 || this.check_text == ""){
           alert("姓名或医生或诊断文本有参数为空");
           return;
@@ -469,9 +467,35 @@ export default {
             this.bill_list.check_text = this.check_text;
       }
       API.Post("api/bill/new", this.bill_list).then(function (res) {
-          
+          // 验证
+            if (res.code == 104) {
+              alert(res.msg);
+            } else if (res.code == 101) {
+              _this.dialog = false;
+              alert(res.msg);
+              let NewPage = "_empty" + "?time=" + new Date().getTime() / 500;
+              _this.$router.push(NewPage);
+              _this.$router.go(-1);
+            }
       })
     },
+  },
+  mounted () {
+    setTimeout(() => {
+      try {
+        anime({
+          targets: '.button-translate-up',
+          translateY: [48, 0],
+          opacity: [0, 1],
+          duration: 625,
+          delay: anime.stagger(75),
+          easing: "easeOutQuint"
+        })
+        
+      } catch (e) {
+        Console.warn("HomeAnimation", "error when animating home entry animation", e)
+      }
+    }, 0.5);
   },
 };
 </script>
