@@ -182,8 +182,8 @@
               <v-textarea
                 outlined
                 name="input-7-4"
-                label="Outlined textarea"
-                value="欲练神功，必先自宫"
+                label="诊断记录填写区"
+                
                 v-model="check_text"
               ></v-textarea>
               <v-btn
@@ -196,7 +196,7 @@
                 @click="calculate"
               >
                 <v-icon left> mdi-calculator </v-icon>
-                {{ "calculate" }}
+                {{ "计算金额" }}
                 <v-icon right> mdi-chevron-right </v-icon>
               </v-btn>
               <v-alert
@@ -210,14 +210,14 @@
                 一共{{ count_price }}元
               </v-alert>
             </v-container>
-            <small>*indicates required field</small>
+            <small>*注意输入</small>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="dialog = false">
-              Close
+              关闭
             </v-btn>
-            <v-btn color="blue darken-1" text @click="saveBill"> Save </v-btn>
+            <v-btn color="blue darken-1" text @click="saveBill"> 保存 </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -231,7 +231,7 @@
           justify="center"
           class="px-4 px-sm-4 px-md-6 px-lg-6 px-xl-8 pt-0 pb-4"
           >
-            <h1 class="title mt-2 pt-1 no-wrap--text font-weight-bold">
+            <h1 class="title mt-2 pa-0 no-wrap--text font-weight-bold">
               {{ "账单" }}
             </h1>
           </v-row>
@@ -266,7 +266,7 @@ export default {
         doctorName: {text:"医生", value:"doctorName", align: "left"},
         drugCount: {text:"药物样式总数", value:"drugCount", align:"left"},
         countPrice: {text: "总金额", value:"countPrice", align: "left"},
-        checkText: {text: "诊断记录",value:"checkText", align:"left"},
+        checkText: {text: "诊断记录",value:"checkText", align:"center"},
         time: {text:"时间", value:"time", align:"left"},
       },
       count_price: 0,
@@ -438,7 +438,7 @@ export default {
           this.dynamicDrugItems[i].number == "" || this.dynamicDrugItems[i].number == "0"
         ) {
           alert("药物有参数为空");
-          return false;
+          return 0;
         } else {
           let name = this.dynamicDrugItems[i].name+'|'+this.dynamicDrugItems[i].measure;
           let num = this.dynamicDrugItems[i].number;
@@ -496,7 +496,7 @@ export default {
         })
         
       } catch (e) {
-        Console.warn("HomeAnimation", "error when animating home entry animation", e)
+        console.warn("HomeAnimation", "error when animating home entry animation", e)
       }
     }, 0.5);
   },
