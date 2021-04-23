@@ -99,10 +99,11 @@ export default {
       drawer: !this.$vuetify.breakpoint.xsOnly,
       flag: null,
       token: null,
-      toolbar_name: "主页",
+      toolbar_name: this.$route.meta.i18n,
     }
   },
   created (){
+    // localStorage cookie 
     let user = JSON.parse(localStorage.getItem('access-user'));
     let token = '';
     if (user) {
@@ -112,7 +113,6 @@ export default {
       this.flag = false;
     else
       this.flag = true;
-    console.log(token);
     this.routes = this.$router.options.routes.filter(el => !el.meta.hide);
   },
   methods:{

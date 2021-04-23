@@ -4,9 +4,7 @@
     fluid
     alt-labels
     class="fill-height transparent elevation-0 full-width pa-md-2 pa-lg-4 pa-xl-4"
-
   >
-
     <v-card class="bkop-light pt-2 elevation-4 mt-2 content-card">
       <v-card-title class="pb-0 mx-1">
         <v-row
@@ -24,7 +22,6 @@
         v-if="flag"
         :dataList="dataList"
         :configList="configList"
-
       />
     </v-card>
   </v-main>
@@ -37,13 +34,10 @@ export default {
   components: {
     DataTable,
   },
-  provide(){
-    return {
-      reload: this.reload
-    }
-  },
   data() {
     return {
+      // 
+      // 
       dataList: [],
       configList: {
         id: { text: "id", value: "id",align: "start",select: false},
@@ -94,16 +88,16 @@ export default {
   methods: {
     getData() {
       let _this = this;
+      //  data return 的是vue实例的属性
+      //  methods vue实例的方法
+      // this ==== vue实例
+      // 就可以通过this访问属性和方法
+
       API.getPatientData().then(function (res) {
         _this.dataList = res;
+        console.log(res);
         _this.flag = true;
       });
-    },
-    reload(){
-      this.flag = false;
-      this.$nextTick(function(){
-        this.flag = true;
-      })
     },
   },
 };

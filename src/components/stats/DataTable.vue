@@ -39,7 +39,7 @@
           <v-dialog v-model="dialog" max-width="600px" v-if="ifNewAndEdit()">
             <template v-slot:activator="{ on, attrs }">
               <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
-                New Item
+                新项目
               </v-btn>
               <!-- <span
                 class="tooltip-header position-relative"
@@ -403,6 +403,7 @@ export default {
       }
     },
     initialize() {
+      this.headers = [];
       for (let key in this.dataList[0]) {
         if (key === "patientId" || key === "doctorId") continue;
         let obj = new Object();

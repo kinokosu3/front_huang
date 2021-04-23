@@ -102,6 +102,9 @@
                         <v-list-item-subtitle
                           v-text="item.office"
                         ></v-list-item-subtitle>
+                        <v-list-item-subtitle
+                          v-text="item.id"
+                        ></v-list-item-subtitle>
                       </v-list-item-content>
                     </template>
                   </v-autocomplete>
